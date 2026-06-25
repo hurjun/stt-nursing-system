@@ -1,6 +1,11 @@
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import autoTableImport from 'jspdf-autotable';
 import type { NursingRecord, Patient, RoundingSession } from '@/types/clinical';
+
+// `jspdf-autotable`'s default export is unwrapped differently by browser bundlers
+// vs. Node's ESM/CJS interop, so normalize it to the callable function.
+const autoTable = ((autoTableImport as unknown as { default?: typeof autoTableImport }).default ??
+  autoTableImport) as typeof autoTableImport;
 import { meanArterialPressure } from './clinical';
 
 const BRAND: [number, number, number] = [11, 107, 203];
@@ -57,8 +62,9 @@ function addFooter(doc: jsPDF): void {
 }
 
 function demographicsRows(patient: Patient): string[][] {
+  // English-only fields: jsPDF core fonts do not embed Korean glyphs.
   return [
-    ['Patient', `${patient.name} (${patient.nameKo})`],
+    ['Patient', patient.name],
     ['MRN', patient.mrn],
     ['Age / Sex', `${patient.age} · ${patient.sex === 'male' ? 'M' : 'F'}`],
     ['Location', `${patient.ward.code} · Room ${patient.room}-${patient.bed}`],
