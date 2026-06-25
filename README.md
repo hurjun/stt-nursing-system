@@ -12,9 +12,14 @@ Turning bedside voice interactions into structured clinical documentation.
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22a559.svg)](./LICENSE)
 
-**[▶ Live demo](https://stt-nursing-system.vercel.app)**
+**[▶ Open the live demo](https://stt-nursing-system.vercel.app)**
 
 </div>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="MediVoice unit dashboard" width="100%" />
+</p>
+<p align="center"><sub><b>The unit dashboard</b> — census, acuity mix, 7-day rounding activity and a live critical-patient watchlist.</sub></p>
 
 ---
 
@@ -22,44 +27,85 @@ Turning bedside voice interactions into structured clinical documentation.
 
 Nursing documentation is one of the most time-consuming parts of inpatient care. **MediVoice** explores a
 voice-first alternative: at the bedside, an AI speaker asks the patient structured assessment questions
-(text-to-speech), the patient's answers are transcribed in real time (speech-to-text), and the system
-normalizes them into a nursing record — which then flows into the patient chart, the rounding schedule, and
-exportable PDF reports.
+(text-to-speech), the answers are transcribed in real time (speech-to-text), and the system normalizes them
+into a nursing record — which then flows into the patient chart, the rounding schedule, and exportable PDF
+reports.
 
-The application is a faithful, interactive realization of an undergraduate research project on improving
-nursing-record efficiency with an AI-speaker assistant. In that study, the assisted workflow reduced
-documentation time for a repeated assessment by **up to 96%**, and Google's Korean speech engine recognized
-the reference utterance with a **0% character error rate**. Those findings are reproduced on the **Research**
-screen.
+The app is an interactive realization of an undergraduate research project on improving nursing-record
+efficiency with an AI-speaker assistant. In that study the assisted workflow cut documentation time for a
+repeated assessment by **up to 96%**, and Google's Korean speech engine recognized the reference utterance with
+a **0% character error rate** — both reproduced on the **Research** screen.
 
-> All data in the app is **synthetic** (generated with faker) and is for demonstration only.
+> Every patient, vital sign and lab value in the app is **synthetic** (generated with faker) and is for
+> demonstration only.
 
-## Highlights
+## ✨ Highlights
 
-- 🎙️ **Voice rounds** — an AI-speaker interaction loop (TTS → patient answer → STT → structured record) built on
-  the Web Speech API, with a reliable simulation mode for presentations.
-- 🩺 **EMR-grade patient charts** — vitals trends, lab panels with reference-range flagging, medications & MAR,
-  assessment scales (Braden, Morse, GCS), intake/output, and a care plan.
-- 🧠 **Standardized nursing language** — NANDA nursing diagnoses linked to **NOC** outcomes and **NIC**
-  interventions, the way clinical documentation systems model them.
-- 📈 **Unit dashboard** — census, acuity mix, a critical-patient watchlist, today's rounding schedule, and
-  recent activity.
-- 📄 **PDF reporting** — one-click nursing assessment and voice-rounding reports rendered with jsPDF.
+- 🎙️ **Voice rounds** — an AI-speaker loop (TTS → patient answer → STT → structured record) on the Web Speech
+  API, with a reliable simulation mode for presentations.
+- 🩺 **EMR-grade charts** — vitals trends, lab panels with reference-range flagging, medications & MAR,
+  assessment scales (Braden, Morse, GCS), intake/output and a care plan.
+- 🧠 **Standardized nursing language** — NANDA diagnoses linked to **NOC** outcomes and **NIC** interventions.
+- 📈 **Unit dashboard** — census, acuity mix, critical watchlist, today's schedule and recent activity.
+- 📄 **PDF reporting** — one-click nursing-assessment and voice-rounding reports rendered with jsPDF.
 - 🌐 **Bilingual UI (English / 한국어)** and a polished **light/dark** clinical theme.
 
-## Screens
+## 📺 Walkthrough
 
-| Screen | What it does |
-| --- | --- |
-| **Dashboard** | Unit KPIs, census & acuity charts, critical watchlist, schedule and recent records |
-| **Patients** | Filterable roster (data grid) → full EMR detail per patient |
-| **Voice Rounds** | The AI-speaker assessment loop with live transcription and structured charting |
-| **Nursing Records** | Browse rounding / SOAP records, review the Q&A transcript, sign & export |
-| **Schedule** | Plan rounding sessions and track today's timeline |
-| **Reports** | Live PDF preview and export of clinical documents |
-| **Research** | The underlying study: STT benchmarks, time-and-motion efficiency, recognition by age |
+### 🧑‍⚕️ Patient roster
+Filter the unit by ward, acuity or free-text search; every row opens the full chart.
 
-## Tech stack
+![Patient roster](docs/screenshots/patients.png)
+
+### 📋 EMR-style patient chart
+Vitals trends, labs with reference-range flags, medications & MAR, NANDA diagnoses, assessment scales, care plan
+and records — organized into tabs, with an allergy and risk-flag banner up top.
+
+![Patient chart](docs/screenshots/patient-chart.png)
+
+### 🎙️ Voice rounds &nbsp;·&nbsp; the centerpiece &nbsp;[`▶ try it live`](https://stt-nursing-system.vercel.app/rounds)
+The AI speaker asks each question aloud (TTS); the patient's reply is transcribed (STT) with a confidence score
+and normalized into a chart-ready nursing entry. A built-in simulation mode keeps the demo working without a
+microphone.
+
+![Voice rounds](docs/screenshots/voice-rounds.png)
+
+### 🗒️ Nursing records
+Browse rounding and SOAP records, review the question-by-question transcript, then sign and export.
+
+![Nursing records](docs/screenshots/nursing-records.png)
+
+### 🗓️ Schedule
+Plan rounding sessions with date/time pickers and track the day's timeline by hour.
+
+![Schedule](docs/screenshots/schedule.png)
+
+### 📄 Reports
+Live PDF preview and one-click export of clinical documents.
+
+![Reports](docs/screenshots/reports.png)
+
+### 🔬 Research &nbsp;[`▶ open live`](https://stt-nursing-system.vercel.app/research)
+The study behind the app — STT engine benchmarks, time-and-motion efficiency (≈96% reduction) and recognition
+quality by patient age group.
+
+![Research](docs/screenshots/research.png)
+
+## 📑 Sample exported report
+
+Generated entirely client-side with jsPDF — a structured nursing-assessment document with demographics, vitals,
+ICD-10 problems, the NANDA → NOC linkage and the medication list.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/sample-report-1.png" alt="Sample nursing assessment report, page 1" /></td>
+    <td width="50%"><img src="docs/screenshots/sample-report-2.png" alt="Sample nursing assessment report, page 2" /></td>
+  </tr>
+</table>
+
+📄 **[Download the full sample report (PDF)](docs/sample-nursing-report.pdf)**
+
+## 🧱 Tech stack
 
 - **React 18 + TypeScript** (strict), built with **Vite**
 - **MUI v5** design system + **MUI X** Data Grid & Date Pickers
@@ -68,7 +114,7 @@ screen.
 - **Web Speech API** for STT/TTS, **jsPDF** for report generation
 - **faker** for synthetic clinical data
 
-## Getting started
+## 🚀 Getting started
 
 ```bash
 # install
@@ -87,7 +133,7 @@ npm run preview
 Requires Node.js ≥ 18.18. Speech recognition uses the browser's Web Speech API (best supported in Chromium-based
 browsers); when it is unavailable, Voice Rounds automatically falls back to simulation mode.
 
-## Project structure
+## 📁 Project structure
 
 ```
 src/
@@ -102,11 +148,11 @@ src/
 └── features/     one module per screen
 ```
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 This project builds on the graduation research *"A study on work efficiency improvement using an AI-speaker–based
-nursing-record work assistance system"* by **Hur Jun, Choi Hyo-jae, and Kim Yul**. Clinical terminology follows the
-NANDA-I / NOC / NIC standardized nursing languages.
+nursing-record work assistance system"* by **Hur Jun, Choi Hyo-jae, and Kim Yul**. Clinical terminology follows
+the NANDA-I / NOC / NIC standardized nursing languages.
 
 ## License
 
