@@ -45,7 +45,6 @@ import {
 import {
   ROUNDING_QUESTIONS,
   QUESTION_SETS,
-  STRUCTURED_REPLIES,
   RESEARCH_HEADLINES,
 } from '@/data/clinical';
 import {
@@ -56,12 +55,17 @@ import {
 } from '@/lib/speech';
 import { downloadRoundingReport } from '@/lib/pdf';
 import { secondsToClock } from '@/lib/format';
+import {
+  normalizeAnswer,
+  pickReplyIndex,
+  shiftFromHour,
+  simulatedConfidence,
+} from '@/lib/rounding';
 import type {
   NursingRecord,
   Patient,
   RoundingAnswer,
   RoundingQuestion,
-  Shift,
 } from '@/types/clinical';
 import { AISpeakerStage, type StagePhase } from './AISpeakerStage';
 import { TranscriptEntry } from './TranscriptEntry';
@@ -129,28 +133,8 @@ const dict = {
   cer0: { en: 'CER 0% on the reference utterance', ko: '기준 발화 문자오류율 0%' },
 } satisfies Dictionary;
 
-/** Derives the working shift from the hour of day (matches the seed convention). */
-function shiftFromHour(hour: number): Shift {
-  if (hour >= 7 && hour < 15) return 'Day';
-  if (hour >= 15 && hour < 23) return 'Evening';
-  return 'Night';
-}
-
 function newId(prefix: string): string {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
-/** Picks a deterministic-feeling but varied reply index for the simulation. */
-function pickReplyIndex(question: RoundingQuestion, seed: number): number {
-  const n = question.sampleReplies.length;
-  if (n === 0) return 0;
-  return (seed * 7 + 3) % n;
-}
-
-/** A realistic STT confidence around 0.9, jittered per answer. */
-function simulatedConfidence(seed: number): number {
-  const jitter = ((seed * 37) % 11) / 100; // 0.00 – 0.10
-  return Math.min(0.99, 0.88 + jitter);
 }
 
 export function VoiceRoundsPage() {
@@ -249,20 +233,8 @@ export function VoiceRoundsPage() {
 
   /* ------------------------------ chart helpers ----------------------------- */
   const buildAnswer = useCallback(
-    (question: RoundingQuestion, idx: number, transcript: string, confidence: number): RoundingAnswer => {
-      const replyIdx = pickReplyIndex(question, idx);
-      const structured =
-        STRUCTURED_REPLIES[question.id]?.[replyIdx] ?? STRUCTURED_REPLIES[question.id]?.[0] ?? transcript;
-      return {
-        questionId: question.id,
-        category: question.category,
-        prompt: question.prompt,
-        transcript,
-        confidence,
-        structured,
-        answeredAt: new Date().toISOString(),
-      };
-    },
+    (question: RoundingQuestion, idx: number, transcript: string, confidence: number): RoundingAnswer =>
+      normalizeAnswer(question, idx, transcript, confidence),
     [],
   );
 
