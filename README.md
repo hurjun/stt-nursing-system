@@ -6,6 +6,7 @@
 
 Turning bedside voice interactions into structured clinical documentation.
 
+[![CI](https://github.com/hurjun/stt-nursing-system/actions/workflows/ci.yml/badge.svg)](https://github.com/hurjun/stt-nursing-system/actions/workflows/ci.yml)
 [![React](https://img.shields.io/badge/React-18-149ECA?logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![MUI](https://img.shields.io/badge/MUI-5-007FFF?logo=mui&logoColor=white)](https://mui.com)
@@ -114,6 +115,30 @@ ICD-10 problems, the NANDA → NOC linkage and the medication list.
 - **Web Speech API** for STT/TTS, **jsPDF** for report generation
 - **faker** for synthetic clinical data
 
+## 🏗️ Architecture
+
+MediVoice is a client-only single-page app organized into clear layers — a typed
+**domain model** (`types/`), curated **clinical vocabularies** and a seeded **synthetic-data**
+generator (`data/`), pure **domain logic** (`lib/`), a **Zustand store** (`store/`), and one
+feature module per screen (`features/`). The voice-rounds loop is the spine of the system:
+
+```
+   AI speaker ──TTS──►  patient  ──speech──►  STT (Web Speech API / simulation)
+                                                   │  raw transcript + confidence
+                                                   ▼
+                                  normalizeAnswer()  ──►  structured, chart-ready phrase
+                                                   ▼
+                                       Nursing record  ──►  Zustand store
+                                                   ▼
+                  ┌────────────────────────────────┼────────────────────────────────┐
+              Patient chart                  Rounding schedule                   PDF report
+```
+
+The pieces that carry the project's clinical credibility are pure and unit-tested: the
+transcript→structured-record normalization (`lib/rounding.ts`), the clinical scoring and
+lab/vital flagging (`lib/clinical.ts`), and the character-error-rate metric behind the research
+benchmark (`lib/cer.ts`).
+
 ## 🚀 Getting started
 
 ```bash
@@ -132,6 +157,25 @@ npm run preview
 
 Requires Node.js ≥ 18.18. Speech recognition uses the browser's Web Speech API (best supported in Chromium-based
 browsers); when it is unavailable, Voice Rounds automatically falls back to simulation mode.
+
+## 🧪 Testing & CI
+
+```bash
+npm test            # run the Vitest suite once
+npm run test:watch  # watch mode
+npm run test:coverage
+```
+
+The suite (Vitest) targets the domain logic the project's credibility rests on — clinical
+scoring and lab/vital flagging (`lib/clinical.ts`), the transcript→structured-record
+normalization (`lib/rounding.ts`), the character-error-rate metric used in the research
+benchmark (`lib/cer.ts`), date/number formatting (`lib/format.ts`), the Zustand reducers
+(`store/`), and invariants of the synthetic-data generators and the rounding-question catalog
+(`data/`). The benchmark tests **recompute** the headline "0% CER on the reference utterance"
+from the implemented metric rather than trusting the hardcoded numbers.
+
+Every push and pull request runs [GitHub Actions](.github/workflows/ci.yml) on Node 20:
+`typecheck → lint → test → build`.
 
 ## 📁 Project structure
 
