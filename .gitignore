@@ -41,6 +41,9 @@ Thumbs.db
 *.tsbuildinfo
 node_modules/.tmp/
 
+# Test coverage
+coverage/
+
 # Local engineering notes & internal tooling (not part of the published project)
 CLAUDE.md
 NOTES.md
