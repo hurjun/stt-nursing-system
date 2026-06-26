@@ -1,3 +1,8 @@
+/* eslint-disable react-refresh/only-export-components --
+ * This module deliberately co-locates the i18n hooks and the `localeOf`
+ * constant with the provider component so the i18n API lives in one place.
+ * Fast Refresh still works for the provider; splitting them would only
+ * fragment the public API across files. */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 export type Lang = 'en' | 'ko';

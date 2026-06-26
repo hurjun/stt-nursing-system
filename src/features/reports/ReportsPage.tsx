@@ -606,19 +606,16 @@ function AssessmentSummary({ patient, t, bi, lang }: AssessmentSummaryProps) {
         <CountTile
           icon={<MedicationOutlinedIcon fontSize="small" />}
           value={patient.diagnoses.length}
-          label={t('problemsCount')}
           sublabel={t('activeProblems')}
         />
         <CountTile
           icon={<PsychologyOutlinedIcon fontSize="small" />}
           value={patient.nanda.length}
-          label={t('nandaCount')}
           sublabel={t('nandaDx')}
         />
         <CountTile
           icon={<MedicationOutlinedIcon fontSize="small" />}
           value={activeMeds.length}
-          label={t('medsCount')}
           sublabel={t('medications')}
         />
       </Stack>
@@ -706,12 +703,10 @@ function VitalCell({ label, value, unit }: { label: string; value: string; unit:
 function CountTile({
   icon,
   value,
-  label,
   sublabel,
 }: {
   icon: React.ReactNode;
   value: number;
-  label: string;
   sublabel: string;
 }) {
   return (

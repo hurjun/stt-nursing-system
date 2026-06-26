@@ -1,3 +1,6 @@
+/* eslint-disable react-refresh/only-export-components --
+ * The color-mode provider intentionally exports its `useColorMode` hook
+ * alongside the provider component; Fast Refresh is unaffected in practice. */
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';

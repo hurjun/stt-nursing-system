@@ -18,7 +18,6 @@ import {
   type DiagnosisTemplate,
 } from './clinical';
 import {
-  ageFromDob,
   bmi as computeBmi,
   bradenRisk,
   computeLabFlag,
