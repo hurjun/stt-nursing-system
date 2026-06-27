@@ -1,7 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   dueIn,
+  formatDate,
+  formatDateTime,
   formatNumber,
+  formatTime,
   initialsOf,
   secondsToClock,
   timeAgo,
@@ -35,6 +38,33 @@ describe('formatNumber', () => {
   it('honours the requested fraction-digit count', () => {
     expect(formatNumber(1234.5, 'en', 1)).toBe('1,234.5');
     expect(formatNumber(2, 'en', 2)).toBe('2.00');
+  });
+});
+
+describe('locale-aware date/time formatting', () => {
+  // A mid-day UTC instant so the calendar date is stable across time zones.
+  const iso = '2026-06-27T12:00:00.000Z';
+
+  it('formats a date with a short month in the active locale', () => {
+    const en = formatDate(iso, 'en');
+    expect(en).toMatch(/Jun/);
+    expect(en).toMatch(/2026/);
+  });
+
+  it('produces a different rendering for Korean', () => {
+    const en = formatDate(iso, 'en');
+    const ko = formatDate(iso, 'ko');
+    expect(ko).toMatch(/2026/);
+    expect(ko).not.toBe(en);
+  });
+
+  it('defaults to English when no language is given', () => {
+    expect(formatDate(iso)).toBe(formatDate(iso, 'en'));
+  });
+
+  it('renders an hour:minute clock for the time helpers', () => {
+    expect(formatTime(iso, 'en')).toMatch(/\d{1,2}:\d{2}/);
+    expect(formatDateTime(iso, 'en')).toMatch(/\d{1,2}:\d{2}/);
   });
 });
 

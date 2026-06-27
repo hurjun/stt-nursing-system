@@ -163,3 +163,80 @@ describe('newsLikeScore', () => {
     expect(newsLikeScore(critical)).toBe(11);
   });
 });
+
+describe('newsLikeScore — single-parameter derangements', () => {
+  // Each case derangess exactly one vital sign from the normal baseline, so the
+  // expected score isolates one threshold band of the early-warning calculation.
+  const cases: Array<[string, Partial<VitalSample>, number]> = [
+    ['bradypnoea (RR 8)', { rr: 8 }, 3],
+    ['borderline tachypnoea (RR 21)', { rr: 21 }, 2],
+    ['severe tachypnoea (RR 25)', { rr: 25 }, 3],
+    ['mild hypoxia (SpO2 95)', { spo2: 95 }, 1],
+    ['moderate hypoxia (SpO2 92)', { spo2: 92 }, 2],
+    ['severe hypoxia (SpO2 91)', { spo2: 91 }, 3],
+    ['mild hypotension (SBP 110)', { sbp: 110 }, 1],
+    ['moderate hypotension (SBP 100)', { sbp: 100 }, 2],
+    ['severe hypotension (SBP 90)', { sbp: 90 }, 3],
+    ['hypertensive crisis (SBP 220)', { sbp: 220 }, 3],
+    ['mild bradycardia (HR 50)', { hr: 50 }, 1],
+    ['borderline tachycardia (HR 91)', { hr: 91 }, 1],
+    ['tachycardia (HR 111)', { hr: 111 }, 2],
+    ['severe bradycardia (HR 40)', { hr: 40 }, 3],
+    ['severe tachycardia (HR 131)', { hr: 131 }, 3],
+    ['low-grade fever (temp 38.1)', { temp: 38.1 }, 1],
+    ['high fever (temp 39.1)', { temp: 39.1 }, 2],
+    ['hypothermia (temp 35)', { temp: 35 }, 2],
+  ];
+
+  it.each(cases)('scores %s as %i points above baseline', (_label, overrides, expected) => {
+    expect(newsLikeScore(vital(overrides))).toBe(expected);
+  });
+
+  it('treats one step inside each threshold as normal (zero points)', () => {
+    expect(newsLikeScore(vital({ rr: 20 }))).toBe(0);
+    expect(newsLikeScore(vital({ spo2: 96 }))).toBe(0);
+    expect(newsLikeScore(vital({ sbp: 111 }))).toBe(0);
+    expect(newsLikeScore(vital({ hr: 90 }))).toBe(0);
+    expect(newsLikeScore(vital({ hr: 51 }))).toBe(0);
+    expect(newsLikeScore(vital({ temp: 38.0 }))).toBe(0);
+  });
+});
+
+describe('vitalTone — reference-range boundaries', () => {
+  it('treats the inclusive low and high limits as normal', () => {
+    expect(vitalTone('hr', 60)).toBe('normal'); // low limit
+    expect(vitalTone('hr', 100)).toBe('normal'); // high limit
+    expect(vitalTone('temp', 36.1)).toBe('normal');
+    expect(vitalTone('temp', 37.5)).toBe('normal');
+    expect(vitalTone('spo2', 94)).toBe('normal');
+  });
+
+  it('flags one step outside each limit', () => {
+    expect(vitalTone('hr', 59)).toBe('low');
+    expect(vitalTone('hr', 101)).toBe('high');
+    expect(vitalTone('temp', 36.0)).toBe('low');
+    expect(vitalTone('temp', 37.6)).toBe('high');
+    expect(vitalTone('spo2', 93)).toBe('low');
+  });
+});
+
+describe('ageFromDob — calendar edge cases', () => {
+  beforeAll(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-06-27T12:00:00.000Z'));
+  });
+  afterAll(() => vi.useRealTimers());
+
+  it('counts a leap-day birthday whose month has already passed', () => {
+    expect(ageFromDob('2000-02-29')).toBe(26);
+  });
+
+  it('counts the birthday itself as the new age', () => {
+    expect(ageFromDob('1991-06-27')).toBe(35);
+  });
+
+  it('does not credit a birthday later this month or in a later month', () => {
+    expect(ageFromDob('1991-06-28')).toBe(34);
+    expect(ageFromDob('1991-07-01')).toBe(34);
+  });
+});

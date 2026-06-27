@@ -75,3 +75,39 @@ describe('STT benchmark reproducibility', () => {
     expect(recommended[0].cer).toBe(minCer);
   });
 });
+
+describe('levenshtein — symmetry and Korean clinical phrases', () => {
+  it('is symmetric in its arguments', () => {
+    expect(levenshtein('치료', '진료')).toBe(levenshtein('진료', '치료'));
+    expect(levenshtein('통증이 있어요', '통증이 없어요')).toBe(1);
+  });
+
+  it('counts a transposition as two single-character edits', () => {
+    expect(levenshtein('ab', 'ba')).toBe(2);
+  });
+});
+
+describe('normalizeForCer — clinical content is preserved, formatting is not', () => {
+  it('keeps digits and letters while dropping units and spacing', () => {
+    expect(normalizeForCer('SpO2 98 %')).toBe('SpO298');
+    expect(normalizeForCer('혈압 120/80 mmHg')).toBe('혈압12080mmHg');
+  });
+});
+
+describe('characterErrors — invariant to spacing and punctuation', () => {
+  it('scores zero when a Korean reply differs only in spacing and punctuation', () => {
+    expect(characterErrors('환자분, 통증 있으세요?', '환자분 통증 있으세요')).toBe(0);
+  });
+
+  it('counts only real content differences', () => {
+    // One Hangul syllable substituted (있 → 없) inside an otherwise identical reply.
+    expect(characterErrors('통증이 있어요', '통증이 없어요')).toBe(1);
+  });
+});
+
+describe('characterErrorRate — Korean substitution example', () => {
+  it('reports the edit count over the normalized reference length', () => {
+    // "통증이있어요" normalizes to six syllables; one substitution => 1/6.
+    expect(characterErrorRate('통증이 있어요', '통증이 없어요')).toBeCloseTo(100 / 6, 5);
+  });
+});
