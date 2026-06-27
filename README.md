@@ -53,6 +53,12 @@ a **0% character error rate** — both reproduced on the **Research** screen.
 
 ## 📺 Walkthrough
 
+### 🌗 Light & dark clinical theme
+The whole UI ships with a polished dark theme alongside light. Here is the unit dashboard in dark
+mode — the same screen the hero image above shows in light.
+
+![MediVoice dashboard in dark mode](docs/screenshots/dashboard-dark.png)
+
 ### 🧑‍⚕️ Patient roster
 Filter the unit by ward, acuity or free-text search; every row opens the full chart.
 
