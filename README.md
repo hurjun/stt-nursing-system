@@ -22,6 +22,11 @@ Turning bedside voice interactions into structured clinical documentation.
 </p>
 <p align="center"><sub><b>The unit dashboard</b> — census, acuity mix, 7-day rounding activity and a live critical-patient watchlist.</sub></p>
 
+<p align="center">
+  <img src="docs/screenshots/demo.gif" alt="MediVoice walkthrough — unit dashboard, patient chart and AI-speaker voice rounds" width="100%" />
+</p>
+<p align="center"><sub><b>End-to-end walkthrough</b> — unit dashboard → patient roster → EMR chart → AI-speaker <b>Voice Rounds</b>, where each answer is transcribed and normalized into a chart-ready nursing entry. Recorded from the production build (<code>npm run build &amp;&amp; npm run preview</code>) driven by Playwright; Voice Rounds is shown in its built-in simulation mode.</sub></p>
+
 ---
 
 ## Overview
