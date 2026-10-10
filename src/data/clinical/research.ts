@@ -3,7 +3,7 @@ import type { EfficiencyStep, RecognitionByAge, SttEngineBenchmark } from '@/typ
 /**
  * Research artefacts reproduced from the underlying thesis:
  * "A study on work efficiency improvement using an AI-speaker-based nursing
- * record work assistance system" (Hur J., Choi H., Kim Y.).
+ * record work assistance system" (Choi H., Kim Y., Hur J., Park J.; KCC 2024).
  */
 
 /** Korean STT engine comparison on a fixed reference utterance (page 19). */
@@ -13,7 +13,7 @@ export const STT_REFERENCE_UTTERANCE =
 export const STT_BENCHMARKS: SttEngineBenchmark[] = [
   { engine: 'Google STT', recognized: '안녕하세요 여름입니다. 저는 충남대학교 컴퓨터공학 학생입니다', characterErrors: 0, cer: 0.0, latencyMs: 410, recommended: true },
   { engine: 'Microsoft Azure', recognized: '안녕하세요 여름입니다. 저는 충남대학교 컴퓨터공학 학셍입니다', characterErrors: 1, cer: 3.7, latencyMs: 520, recommended: false },
-  { engine: 'Naver Papago', recognized: '안녕하세요 여름입니다. 저는 충남대학교 컴퓨터공학 학셍입니다', characterErrors: 1, cer: 3.7, latencyMs: 480, recommended: false },
+  { engine: 'Naver Clova', recognized: '안녕하세요 여름입니다. 저는 충남대학교 컴퓨터공학 학셍입니다', characterErrors: 1, cer: 3.7, latencyMs: 480, recommended: false },
   { engine: 'ETRI', recognized: '안녕하세요 여름입니다. 저는 중남대학교 컴퓨터공학 학성입니다', characterErrors: 4, cer: 14.8, latencyMs: 610, recommended: false },
 ];
 
@@ -47,7 +47,7 @@ export const RESEARCH_HEADLINES = {
   bestEngine: 'Google STT',
   bestEngineCer: 0.0,
   cerPassThreshold: 20,
-  studyAuthors: 'Hur J., Choi H., Kim Y.',
+  studyAuthors: 'Choi H., Kim Y., Hur J., Park J. (KCC 2024)',
   nandaDiagnoses: 57,
   assessmentItems: 127,
   interventions: 272,
